@@ -6,24 +6,27 @@ using System.Threading.Tasks;
 namespace NewsAgregator.Models
 {
     /// <summary>
-    /// Список новостных источников.
+    /// Источники новостей.
     /// </summary>
     public class NewsSources
     {
-        private static List<string> sources = new List<string>()
-        {
-            "https://aviation21.ru/category/novosti-aviacii/feed/",
-            "https://rossaprimavera.ru/rss",
-            "http://www.ato.ru/feed/taxonomy/term/12",
+        //private static List<string> sources = new List<string>()
+        //{
+        //    "https://aviation21.ru/category/novosti-aviacii/feed/",
+        //    "https://rossaprimavera.ru/rss",
+        //    "http://www.ato.ru/feed/taxonomy/term/12",
 
-        };
-        public List<string> Sources { get; }
+        //};
 
-        public void AddSource(string source)
-        {
-            sources.Add(source);
-        }
+        public int Id { get; set; }
+        /// <summary>
+        /// Названия ресурса.
+        /// </summary>
+        public string NameSource { get; set; }
+        /// <summary>
+        /// Ссылка на ресурс.
+        /// </summary>
+        public string SourceURL { get; set; }
 
-        
     } 
 }
