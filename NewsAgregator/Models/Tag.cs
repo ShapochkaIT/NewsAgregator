@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace NewsAgregator.Models
 {
+    /// <summary>
+    /// Модель тега.
+    /// </summary>
     public class Tag
     {
         public int Id { get; set; }

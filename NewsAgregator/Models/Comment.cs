@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace NewsAgregator.Models
 {
+    /// <summary>
+    /// Модель комментария.
+    /// </summary>
     public class Comment
     {
         public int Id { get; set; }

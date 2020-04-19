@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace NewsAgregator.Models
 {
-    public class ApplicationDbContext : DbContext
+    public class AppDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+
+        }
+
         public DbSet<News> News { get; set; }
     }
 }
