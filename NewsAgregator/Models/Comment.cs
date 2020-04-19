@@ -5,15 +5,12 @@ using System.Threading.Tasks;
 
 namespace NewsAgregator.Models
 {
-    /// <summary>
-    /// Представляет конкретную новость.
-    /// </summary>
-    public class News
+    public class Comment
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public News News { get; set; }
         public string Text { get; set; }
-        public string NewsURL { get; set; }
         public DateTime Date { get; set; }
+        public User User { get; set; }
     }
 }
