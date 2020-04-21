@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
 
 namespace NewsAgregator.Models
@@ -15,6 +16,6 @@ namespace NewsAgregator.Models
         public string Text { get; set; }
         //TODO: добавить теги.
         public string NewsURL { get; set; }
-        public DateTime Date { get; set; }
+        public DateTimeOffset Date { get; set; }
     }
 }

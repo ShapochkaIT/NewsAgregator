@@ -13,7 +13,7 @@ namespace NewsAgregator.Models
         //private static List<string> sources = new List<string>()
         //{
         //    "https://aviation21.ru/category/novosti-aviacii/feed/",
-        //    "https://rossaprimavera.ru/rss",
+        //    "https://www.aviaport.ru/news/rss/",
         //    "http://www.ato.ru/feed/taxonomy/term/12",
 
         //};

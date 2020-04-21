@@ -1,0 +1,22 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    @foreach (var item in @Model)
+    {
+        <h3>@item.Title</h3>
+        <p>@item.Text</p>
+        <p>@item.NewsURL</p>
+        //<p>@item.Date</p>
+    }
+</body>
+</html>

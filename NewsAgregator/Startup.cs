@@ -40,7 +40,7 @@ namespace NewsAgregator
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute("Default", "{controller}/{action}/{id?}");
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }
