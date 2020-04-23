@@ -5,6 +5,7 @@ using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NewsAgregator.Models;
 
 namespace NewsAgregator.Controllers
@@ -20,50 +21,25 @@ namespace NewsAgregator.Controllers
 
         public IActionResult Index()
         {
-            AddNewsInDB();
+            Parser parser = new Parser();
 
-            return View(Context.News.ToList());
-        }
+            var dbNews = Context.News.ToList();
 
-        private bool CheckNovelties(SyndicationItem item)
-        {
-            var list = Context.News.ToList();
-            foreach (var news in list)
+            // получаем список новостей за последний день.
+            var news = parser.ParseNews(Context.NewsSources.ToList());
+
+            // удаляем из полученного списка новости, существующие в БД.
+            for (int i = news.Count - 1; i >= 0; i--)
             {
-                if (news.Title == item.Title.Text && news.Date == item.PublishDate)
-                    return false;
-            }
-            return true;
-        }
-
-        private void AddNewsInDB()
-        {
-            var newsSources = Context.NewsSources.ToList();
-            foreach (var source in newsSources)
-            {
-                using XmlReader reader = XmlReader.Create(source.SourceURL);
-
-                SyndicationFeed channel = SyndicationFeed.Load(reader);
-                var items = channel.Items;
-
-                foreach (var item in items)
+                if (!parser.CheckNovelties(dbNews, news[i]))
                 {
-                    News news = new News()
-                    {
-                        Title = item.Title.Text,
-                        Text = item.Summary.Text,
-                        NewsURL = item.Links[0].Uri.ToString(),
-                        //TODO: настроить нормальное отображение даты-времени
-                        //Date = (DateTimeOffset) item.PublishDate
-                    };
-
-                    if (CheckNovelties(item))
-                    {
-                        Context.News.Add(news);
-                        Context.SaveChanges();
-                    }
+                    news.Remove(news[i]);
                 }
             }
+
+            news.Sort((x, y) => y.Date.CompareTo(x.Date));
+
+            return View(news);
         }
     }
 }
