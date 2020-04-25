@@ -11,12 +11,16 @@
     <title>Index</title>
 </head>
 <body>
+
     @foreach (var item in @Model)
     {
+        //<h1>@item</h1>
         <h3>@item.Title</h3>
+        <img width="500" height="300" src="@item.ImageSrc" />
         <p>@item.Text</p>
-        <p>@item.NewsURL</p>
+        <a href="@item.NewsURL">Читать далее...</a>
         <p>@item.Date</p>
+
     }
 </body>
 </html>

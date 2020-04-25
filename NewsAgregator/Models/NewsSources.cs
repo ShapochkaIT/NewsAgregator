@@ -15,7 +15,7 @@ namespace NewsAgregator.Models
         //    "https://aviation21.ru/category/novosti-aviacii/feed/",
         //    "https://www.aviaport.ru/news/rss/",
         //    "http://www.ato.ru/feed/taxonomy/term/12"
-        //    
+        //    https://novosti-kosmonavtiki.ru/news/rss/
         //    https://aviacia-all.ru/stati/feed/
 
         //};

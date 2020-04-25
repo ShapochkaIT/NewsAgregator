@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.ServiceModel.Syndication;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
 namespace NewsAgregator.Models
 {
-    public class Parser
+    public class ImParser
     {
+
         /// <summary>
         /// Проверяет новость на новизну.
         /// </summary>
@@ -59,11 +62,10 @@ namespace NewsAgregator.Models
             return arrNews;
         }
 
-        public List<News> SortByDateTime(List<News> news)
-        {
-            news.Sort();
 
-            return news;
+        public void DoSomething()
+        {
+
         }
     }
 }
