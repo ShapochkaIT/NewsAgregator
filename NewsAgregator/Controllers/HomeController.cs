@@ -20,11 +20,8 @@ namespace NewsAgregator.Controllers
         {
             Context = context;
         }
-        List<News> list = new List<News>();
-        ParserWorker<News[]> parser_habr = new ParserWorker<News[]>(new HabrParser());
 
-        //public void Parser_OnNewData(object o, string[] str) { list.AddRange(str); }
-        //Настройки для парсера
+        ParserWorker<List<News>> parser_habr = new ParserWorker<List<News>>(new AWParser());
 
         public IActionResult Index()
         {
@@ -45,13 +42,8 @@ namespace NewsAgregator.Controllers
             //}
 
             //news.Sort((x, y) => y.Date.CompareTo(x.Date));
-            parser_habr.Settings = new HabrSettings(1, 2);
 
-            //parser_habr.Start();
-
-            list.AddRange(parser_habr.Worker());
-            //parser_habr.OnNewData += Parser_OnNewData;
-            return View(list);
+            return View(parser_habr.Worker());
         }
     }
 }

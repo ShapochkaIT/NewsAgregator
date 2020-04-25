@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -12,20 +9,30 @@ namespace NewsAgregator.Models.Parser
     /// </summary>
     class HtmlLoader
     {
-        readonly HttpClient client; //для отправки HTTP запросов и получения HTTP ответов.
-        readonly string url; //сюда будем передовать адрес.
+        /// <summary>
+        /// Клиента отправки HTTP запросов и получения HTTP ответов.
+        /// </summary>
+        readonly HttpClient client;
 
-        public HtmlLoader(IParserSettings settings)
+        /// <summary>
+        /// Адрес страницы.
+        /// </summary>
+        readonly string url;
+
+        public HtmlLoader(string url)
         {
             client = new HttpClient();
-            client.DefaultRequestHeaders.Add("User-Agent", "C# App"); //Это для индентификации на сайте-жертве.
-            url = $"{settings.BaseUrl}/{settings.Postfix}/"; //Здесь собирается адресная строка
+            //client.DefaultRequestHeaders.Add("User-Agent", "C# App"); //Индентификации на сайте-источнике.
+            this.url = url;
         }
 
-        public async Task<string> GetSourceByPage(int id) // id - это id страницы
+        /// <summary>
+        /// Возвращает код страницы.
+        /// </summary>
+        /// <returns>Код страницы.</returns>
+        public async Task<string> GetSourceByPage()
         {
-            string currentUrl = url.Replace("{CurrentId}", id.ToString());//Подменяем {CurrentId} на номер страницы
-            HttpResponseMessage responce = await client.GetAsync(currentUrl); //Получаем ответ с сайта.
+            HttpResponseMessage responce = await client.GetAsync(url); //Получаем ответ с сайта.
             string source = default;
 
             if (responce != null && responce.StatusCode == HttpStatusCode.OK)
