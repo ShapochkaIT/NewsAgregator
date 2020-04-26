@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NewsAgregator.Models;
 using NewsAgregator.Models.Parser;
-using NewsAgregator.Models.Parser.Habr;
+using NewsAgregator.Models.Parser.Sources;
 
 namespace NewsAgregator.Controllers
 {
@@ -21,16 +21,21 @@ namespace NewsAgregator.Controllers
             Context = context;
         }
 
-        ParserWorker<List<News>> parser_habr = new ParserWorker<List<News>>(new AWParser());
+        ParserWorker<List<News>> parserAW = new ParserWorker<List<News>>(new AWParser());
+        ParserWorker<List<News>> parserFAVT = new ParserWorker<List<News>>(new FAVTParser());
+        ParserWorker<List<News>> parserFG = new ParserWorker<List<News>>(new FGParser());
+        ParserWorker<List<News>> parserRC = new ParserWorker<List<News>>(new RosCosmosParser());
 
         public IActionResult Index()
         {
-            //ParserWorker parser = new ParserWorker();
-
             //var dbNews = Context.News.ToList();
 
-            //// получаем список новостей за последний день.
+            // получаем список новостей за последний день.
             //var news = parser.ParseNews(Context.NewsSources.ToList());
+            var news = parserAW.Worker();
+            news.AddRange(parserFAVT.Worker());
+            news.AddRange(parserFG.Worker());
+            news.AddRange(parserRC.Worker());
 
             //// удаляем из полученного списка новости, существующие в БД.
             //for (int i = news.Count - 1; i >= 0; i--)
@@ -41,9 +46,19 @@ namespace NewsAgregator.Controllers
             //    }
             //}
 
-            //news.Sort((x, y) => y.Date.CompareTo(x.Date));
+            news.Sort((x, y) => y.Date.CompareTo(x.Date));
 
-            return View(parser_habr.Worker());
+            return View(news);
+        }
+
+        bool CheckNovelties(List<News> listOldNews, News newNews)
+        {
+            foreach (var news in listOldNews)
+            {
+                if (news.Title == newNews.Title && news.Date == newNews.Date)
+                    return false;
+            }
+            return true;
         }
     }
 }

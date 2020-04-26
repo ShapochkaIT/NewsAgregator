@@ -16,7 +16,10 @@
     {
         //<h1>@item</h1>
         <h3>@item.Title</h3>
-        <img width="500" height="300" src="@item.ImageSrc" />
+        @if (item.ImageSrc != null)
+        {
+            <img width="160" height="110" src="@item.ImageSrc" />
+        }
         <p>@item.Text</p>
         <a href="@item.NewsURL">Читать далее...</a>
         <p>@item.Date</p>

@@ -3,14 +3,14 @@ using AngleSharp.Html.Dom;
 using System;
 using System.Collections.Generic;
 
-namespace NewsAgregator.Models.Parser.Habr
+namespace NewsAgregator.Models.Parser.Sources
 {
     /// <summary>
-    /// Парсер новостей с сайта "Авиация мира".
+    /// Парсер новостей с сайта "Авиация России".
     /// </summary>
     public class AWParser : IParser<List<News>>
     {
-        public string BaseUrl { get; set; } = "https://aviacia-all.ru/stati/";
+        public string BaseUrl { get; set; } = "https://aviation21.ru/category/novosti-aviacii/";
 
         public List<News> Parse(IHtmlDocument document)
         {

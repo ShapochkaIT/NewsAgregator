@@ -37,5 +37,6 @@ namespace NewsAgregator.Models.Parser
             T result = Parser.Parse(document);
             return result;
         }
+
     }
 }
