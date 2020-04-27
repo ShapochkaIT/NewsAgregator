@@ -11,7 +11,7 @@ namespace NewsAgregator.Models.Parser.Sources
     {
         public string BaseUrl { get; set; } = "https://favt.ru/novosti-sertifikacii-avia-tehniky/";
 
-        public List<News> Parse(IHtmlDocument document)
+        public List<News> ParseListNews(IHtmlDocument document)
         {
             List<News> newsList = new List<News>(); // Хранит объекты новостей News.
 

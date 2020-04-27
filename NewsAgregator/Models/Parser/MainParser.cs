@@ -7,7 +7,7 @@ namespace NewsAgregator.Models.Parser
     /// Основной класс-парсер.
     /// </summary>
     /// <typeparam name="T">Данные любого ссылочного типа.</typeparam>
-    class ParserWorker<T> where T : class
+    class MainParser<T> where T : class
     {
         HtmlLoader loader;
 
@@ -17,7 +17,7 @@ namespace NewsAgregator.Models.Parser
         /// Конструктор класса.
         /// </summary>
         /// <param name="parser">Класс, реализующий интерфейс IParser.</param>
-        public ParserWorker(IParser<T> parser)
+        public MainParser(IParser<T> parser)
         {
             Parser = parser;
             loader = new HtmlLoader(Parser.BaseUrl);
@@ -27,14 +27,14 @@ namespace NewsAgregator.Models.Parser
         /// Возвращает конечный результат парсинга кода страницы.
         /// </summary>
         /// <returns>Результат с данными ссылочного типа.</returns>
-        public T Worker()
+        public T ParsePage()
         {
             string source = loader.GetSourceByPage().Result; // Получаем код страницы
 
             //TODO: почитать подробнее про IHtmlDocument и HtmlParser.
             HtmlParser domParser = new HtmlParser();
             IHtmlDocument document = domParser.ParseDocument(source);
-            T result = Parser.Parse(document);
+            T result = Parser.ParseListNews(document);
             return result;
         }
 

@@ -21,34 +21,41 @@ namespace NewsAgregator.Controllers
             Context = context;
         }
 
-        ParserWorker<List<News>> parserAW = new ParserWorker<List<News>>(new AWParser());
-        ParserWorker<List<News>> parserFAVT = new ParserWorker<List<News>>(new FAVTParser());
-        ParserWorker<List<News>> parserFG = new ParserWorker<List<News>>(new FGParser());
-        ParserWorker<List<News>> parserRC = new ParserWorker<List<News>>(new RosCosmosParser());
+        MainParser<List<News>> parserAW = new MainParser<List<News>>(new AWParser());
+        MainParser<List<News>> parserFAVT = new MainParser<List<News>>(new FAVTParser());
+        MainParser<List<News>> parserFG = new MainParser<List<News>>(new FGParser());
+        MainParser<List<News>> parserRC = new MainParser<List<News>>(new RosCosmosParser());
 
         public IActionResult Index()
         {
-            //var dbNews = Context.News.ToList();
+            var dataBase = Context.News;
+            var dbNews = Context.News.ToList();
 
             // получаем список новостей за последний день.
             //var news = parser.ParseNews(Context.NewsSources.ToList());
-            var news = parserAW.Worker();
-            news.AddRange(parserFAVT.Worker());
-            news.AddRange(parserFG.Worker());
-            news.AddRange(parserRC.Worker());
-
-            //// удаляем из полученного списка новости, существующие в БД.
-            //for (int i = news.Count - 1; i >= 0; i--)
-            //{
-            //    if (!parser.CheckNovelties(dbNews, news[i]))
-            //    {
-            //        news.Remove(news[i]);
-            //    }
-            //}
+            var news = parserAW.ParsePage();
+            news.AddRange(parserFAVT.ParsePage());
+            news.AddRange(parserFG.ParsePage());
+            news.AddRange(parserRC.ParsePage());
 
             news.Sort((x, y) => y.Date.CompareTo(x.Date));
 
-            return View(news);
+            // удаляем из полученного списка новости, существующие в БД.
+            foreach (var item in news)
+            {
+                if (CheckNovelties(dbNews, item))
+                    dataBase.Add(item);
+            }
+
+            //for (int i = news.Count - 1; i >= 0; i--)
+            //{
+            //    else news.Remove(news[i]);
+            //}
+            Context.SaveChanges();
+            //dataBase.RemoveRange(dataBase);
+            //Context.SaveChanges();
+
+            return View(dataBase.ToList());
         }
 
         bool CheckNovelties(List<News> listOldNews, News newNews)

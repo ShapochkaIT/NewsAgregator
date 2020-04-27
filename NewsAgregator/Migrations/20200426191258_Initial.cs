@@ -14,9 +14,10 @@ namespace NewsAgregator.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(nullable: true),
+                    ImageSrc = table.Column<string>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     NewsURL = table.Column<string>(nullable: true),
-                    Date = table.Column<DateTime>(nullable: false)
+                    Date = table.Column<DateTimeOffset>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -17,6 +17,6 @@ namespace NewsAgregator.Models.Parser
         /// </summary>
         /// <param name="document">Документ, содержащий код страницы.</param>
         /// <returns></returns>
-        T Parse(IHtmlDocument document); // тип T при реализации будет заменяться на любой другой тип
+        T ParseListNews(IHtmlDocument document); // тип T при реализации будет заменяться на любой другой тип
     }
 }

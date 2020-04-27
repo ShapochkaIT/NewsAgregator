@@ -14,6 +14,5 @@ namespace NewsAgregator.Models
         }
 
         public DbSet<News> News { get; set; }
-        public DbSet<NewsSources> NewsSources { get; set; }
     }
 }

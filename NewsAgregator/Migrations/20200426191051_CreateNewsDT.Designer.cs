@@ -10,8 +10,8 @@ using NewsAgregator.Models;
 namespace NewsAgregator.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200419133830_Initial")]
-    partial class Initial
+    [Migration("20200426191051_CreateNewsDT")]
+    partial class CreateNewsDT
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,8 +28,11 @@ namespace NewsAgregator.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ImageSrc")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NewsURL")
                         .HasColumnType("nvarchar(max)");
