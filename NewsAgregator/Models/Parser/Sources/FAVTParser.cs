@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NewsAgregator.Models.Parser.Sources
 {
-    public class FAVTParser : IParser<List<News>>
+    public class FAVTParser : IParser<News>
     {
         public string BaseUrl { get; set; } = "https://favt.ru/novosti-sertifikacii-avia-tehniky/";
 
@@ -35,6 +35,29 @@ namespace NewsAgregator.Models.Parser.Sources
                 newsList.Add(news);
             }
             return newsList;
+        }
+
+        public News ParseNews(IHtmlDocument document, string url)
+        {
+            IElement item = document.QuerySelector("div.news-info");
+
+            string mainText = "";
+
+            foreach (var p in item.QuerySelectorAll("p"))
+            {
+                mainText += p.TextContent + "\n";
+            }
+
+            News news = new News()
+            {
+                Title = item.QuerySelector("div.news-info h2").TextContent,
+                ImageSrc = item.QuerySelector("img")?.GetAttribute("src"),
+                Text = mainText,
+                NewsURL = url,
+                Date = Convert.ToDateTime(item.QuerySelector("div.news-unit-date").TextContent)
+            };
+
+            return news;
         }
     }
 }

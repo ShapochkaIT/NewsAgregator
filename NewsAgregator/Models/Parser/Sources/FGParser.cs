@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace NewsAgregator.Models.Parser.Sources
 {
-    public class FGParser : IParser<List<News>>
+    public class FGParser : IParser<News>
     {
         public string BaseUrl { get; set; } = "https://www.flightglobal.com/1013.type";
 
@@ -29,6 +29,30 @@ namespace NewsAgregator.Models.Parser.Sources
                 newsList.Add(news);
             }
             return newsList;
+        }
+
+        public News ParseNews(IHtmlDocument document, string url)
+        {
+            IElement header = document.QuerySelector("div.headerWrapper");
+            IElement container = document.QuerySelector("div.storyContentWrapper");
+
+            string mainText = "";
+
+            foreach (var p in container.QuerySelectorAll("p"))
+            {
+                mainText += p.TextContent + "\n";
+            }
+
+            News news = new News()
+            {
+                Title = header.QuerySelector("h1")?.TextContent,
+                ImageSrc = container.QuerySelector("img")?.GetAttribute("data-src"),
+                Text = mainText,
+                NewsURL = url,
+                Date = Convert.ToDateTime(header.QuerySelector("span.date")?.TextContent ?? "01.01.1111")
+            };
+
+            return news;
         }
     }
 }

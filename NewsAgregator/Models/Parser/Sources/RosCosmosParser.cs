@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NewsAgregator.Models.Parser.Sources
 {
-    public class RosCosmosParser : IParser<List<News>>
+    public class RosCosmosParser : IParser<News>
     {
         public string BaseUrl { get; set; } = "https://www.roscosmos.ru/102/";
 
@@ -31,6 +31,33 @@ namespace NewsAgregator.Models.Parser.Sources
                 newsList.Add(news);
             }
             return newsList;
+        }
+
+        public News ParseNews(IHtmlDocument document, string url)
+        {
+            IElement item = document.QuerySelector("div.newsitem");
+
+            string mainText = "";
+
+            foreach (var p in item.QuerySelectorAll("p"))
+            {
+                mainText += p.TextContent + "\n";
+            }
+            foreach (var p in item.QuerySelectorAll("div.block_v1"))
+            {
+                mainText += p.TextContent + "\n";
+            }
+
+            News news = new News()
+            {
+                Title = item.QuerySelector("h2")?.TextContent,
+                ImageSrc = item.QuerySelector("img")?.GetAttribute("data-src"),
+                Text = mainText,
+                NewsURL = url,
+                Date = Convert.ToDateTime(item.QuerySelector("div.date")?.TextContent ?? "01.01.1111")
+            };
+
+            return news;
         }
     }
 }

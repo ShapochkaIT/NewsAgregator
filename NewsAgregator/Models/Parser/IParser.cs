@@ -1,4 +1,5 @@
 ﻿using AngleSharp.Html.Dom;
+using System.Collections.Generic;
 
 namespace NewsAgregator.Models.Parser
 {
@@ -13,10 +14,12 @@ namespace NewsAgregator.Models.Parser
         /// </summary>
         string BaseUrl { get; set; } //url сайта
         /// <summary>
-        /// Парсит документ с кодом страницы сайта.
+        /// Парсит документ с кодом страницы со списком новостей.
         /// </summary>
         /// <param name="document">Документ, содержащий код страницы.</param>
         /// <returns></returns>
-        T ParseListNews(IHtmlDocument document); // тип T при реализации будет заменяться на любой другой тип
+        List<T> ParseListNews(IHtmlDocument document); // тип T при реализации будет заменяться на любой другой тип
+
+        T ParseNews(IHtmlDocument document, string url);
     }
 }

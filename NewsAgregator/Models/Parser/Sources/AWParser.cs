@@ -2,13 +2,14 @@
 using AngleSharp.Html.Dom;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NewsAgregator.Models.Parser.Sources
 {
     /// <summary>
     /// Парсер новостей с сайта "Авиация России".
     /// </summary>
-    public class AWParser : IParser<List<News>>
+    public class AWParser : IParser<News>
     {
         public string BaseUrl { get; set; } = "https://aviation21.ru/category/novosti-aviacii/";
 
@@ -21,7 +22,7 @@ namespace NewsAgregator.Models.Parser.Sources
             foreach (var item in items)
             {
                 // Заполнение полей новости.
-                News news = new News() 
+                News news = new News()
                 {
                     Title = item.QuerySelector("h2").TextContent,
                     ImageSrc = item.QuerySelector("img").GetAttribute("src"),
@@ -32,6 +33,29 @@ namespace NewsAgregator.Models.Parser.Sources
                 newsList.Add(news);
             }
             return newsList;
+        }
+
+        public News ParseNews(IHtmlDocument document, string url)
+        {
+            IElement item = document.QuerySelector("main.site-main");
+
+            string mainText = "";
+
+            foreach (var p in item.QuerySelectorAll("p"))
+            {
+                mainText += p.TextContent + "\n";
+            }
+
+            News news = new News()
+            {
+                Title = item.QuerySelector("h3.page-title").TextContent,
+                ImageSrc = item.QuerySelector("img").GetAttribute("src"),
+                Text = mainText,
+                NewsURL = url,
+                Date = Convert.ToDateTime(item.QuerySelector("time").GetAttribute("datetime"))
+            };
+
+            return news;
         }
     }
 }

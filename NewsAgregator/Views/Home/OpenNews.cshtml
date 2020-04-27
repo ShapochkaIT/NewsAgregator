@@ -1,0 +1,23 @@
+﻿@using NewsAgregator.Models
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>OpenNews</title>
+</head>
+<body>
+        <h3>@Model.Title</h3>
+        @if (@Model.ImageSrc != null)
+        {
+            <img width="360" height="210" src="@Model.ImageSrc" />
+        }
+        <p>@Model.Text</p>
+        <a href="@Model.NewsURL">Читать в источнике...</a>
+        <p>@Model.Date</p>
+    </body>
+</html>

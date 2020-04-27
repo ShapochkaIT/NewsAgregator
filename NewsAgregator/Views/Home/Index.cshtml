@@ -21,7 +21,7 @@
             <img width="160" height="110" src="@item.ImageSrc" />
         }
         <p>@item.Text</p>
-        <a href="@item.NewsURL">Читать далее...</a>
+        <a href="/Home/OpenNews/@Model.IndexOf(item)">Читать далее...</a>
         <p>@item.Date</p>
 
     }
