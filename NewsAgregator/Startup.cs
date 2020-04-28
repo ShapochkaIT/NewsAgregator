@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NewsAgregator.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace NewsAgregator
 {
@@ -35,6 +37,20 @@ namespace NewsAgregator
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // подключаем файлы по умолчанию
+            app.UseDefaultFiles();
+            // подключаем статические файлы
+            app.UseStaticFiles();
+            // добавляем поддержку каталога node_modules
+            app.UseFileServer(new FileServerOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(env.ContentRootPath, "node_modules")
+                ),
+                RequestPath = "/node_modules",
+                EnableDirectoryBrowsing = false
+            });
 
             app.UseRouting();
 

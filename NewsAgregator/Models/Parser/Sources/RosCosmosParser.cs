@@ -51,7 +51,7 @@ namespace NewsAgregator.Models.Parser.Sources
             News news = new News()
             {
                 Title = item.QuerySelector("h2")?.TextContent,
-                ImageSrc = item.QuerySelector("img")?.GetAttribute("src"),
+                ImageSrc = "https://www.roscosmos.ru" + item.QuerySelector("img")?.GetAttribute("src"),
                 Text = mainText,
                 NewsURL = url,
                 Date = Convert.ToDateTime(item.QuerySelector("div.date")?.TextContent ?? DateTime.Now.ToString())

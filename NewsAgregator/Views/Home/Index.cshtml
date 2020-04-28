@@ -1,29 +1,30 @@
 ﻿
-@{
-    Layout = null;
+@foreach (var item in @Model)
+{
+    <table cellpadding="10">
+
+        <tr>
+            <td>
+                <a href="/Home/OpenNews/@Model.IndexOf(item)">
+                    @if (item.ImageSrc != null)
+                    {
+                        <img width="240" height="160" src="@item.ImageSrc" />
+                    }
+                </a>
+            </td>
+            <td>
+                <header>
+                    <h4><a href="/Home/OpenNews/@Model.IndexOf(item)">@item.Title</a></h4>
+                </header>
+                <article>@item.Text</article>
+                <br />
+                <h6>Опубликовано: <time>@item.Date.DateTime</time></h6>
+            </td>
+
+        </tr>
+
+    </table>
+    <img src="~/images/separator.png" />
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-
-    @foreach (var item in @Model)
-    {
-        //<h1>@item</h1>
-        <h3>@item.Title</h3>
-        @if (item.ImageSrc != null)
-        {
-            <img width="160" height="110" src="@item.ImageSrc" />
-        }
-        <p>@item.Text</p>
-        <a href="/Home/OpenNews/@Model.IndexOf(item)">Читать далее...</a>
-        <p>@item.Date</p>
-
-    }
-</body>
-</html>

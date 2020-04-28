@@ -33,7 +33,7 @@ namespace NewsAgregator.Controllers
             IQueryable<News> dbNews = dataBase;
             //var dbNews = Context.News.ToList();
 
-            //получаем список новостей.
+            // получаем список новостей.
 
             var news = parserAW.ParseListNews(parser.ParsePage(parserAW.BaseUrl));
             news.AddRange(parserFAVT.ParseListNews(parser.ParsePage(parserFAVT.BaseUrl)));
@@ -42,32 +42,33 @@ namespace NewsAgregator.Controllers
 
             news.Sort((x, y) => y.Date.CompareTo(x.Date));
 
-            //удаляем из полученного списка новости, существующие в БД.
+            // добавляем в БД новые новости
             foreach (var item in news)
             {
                 if (CheckNovelties(dataBase.ToList(), item))
                     dataBase.Add(item);
             }
-
-/*            for (int i = news.Count - 1; i >= 0; i--)
-            {
-                else news.Remove(news[i]);
-            }*/
             Context.SaveChanges();
             //dataBase.RemoveRange(dataBase);
-            dbNews = dataBase.OrderByDescending(s => s.Date);
+            dbNews = dataBase.OrderByDescending(s => s.Date); // сортируем новости в БД по дате.
             //Context.SaveChanges();
 
-            //return View(dataBase.ToList());
             return View(dbNews.ToList());
         }
 
+        /// <summary>
+        /// Открывает новость полностью.
+        /// </summary>
+        /// <param name="id">Индекс новости в списке новостей.</param>
+        /// <returns></returns>
         public IActionResult OpenNews(int id)
         {
             List<News> listNews = Context.News.OrderByDescending(s => s.Date).ToList();
             string url = listNews[id].NewsURL;
 
             News news;
+
+            // проверка, с какого сайта новость и ее парсинг
 
             if (url.Contains("aviation21.ru"))
                 news = parserAW.ParseNews(parser.ParsePage(url), url);
@@ -86,6 +87,12 @@ namespace NewsAgregator.Controllers
             return View(news);
         }
 
+        /// <summary>
+        /// Проверка новости на новизну.
+        /// </summary>
+        /// <param name="listOldNews">Список новостей, уже добавленных в БД.</param>
+        /// <param name="newNews">Новость на проверку.</param>
+        /// <returns></returns>
         bool CheckNovelties(List<News> listOldNews, News newNews)
         {
             foreach (var news in listOldNews)
