@@ -24,11 +24,11 @@ namespace NewsAgregator.Models.Parser.Sources
                 // Заполнение полей новости.
                 News news = new News()
                 {
-                    Title = item.QuerySelector("h2").TextContent,
-                    ImageSrc = item.QuerySelector("img").GetAttribute("src"),
-                    Text = item.QuerySelector("p").TextContent,
-                    NewsURL = item.QuerySelector("a").GetAttribute("href"),
-                    Date = Convert.ToDateTime(item.QuerySelector("time").GetAttribute("datetime"))
+                    Title = item.QuerySelector("h2")?.TextContent,
+                    ImageSrc = item.QuerySelector("img")?.GetAttribute("src"),
+                    Text = item.QuerySelector("p")?.TextContent,
+                    NewsURL = item.QuerySelector("a")?.GetAttribute("href") ?? BaseUrl,
+                    Date = Convert.ToDateTime(item.QuerySelector("time")?.GetAttribute("datetime") ?? DateTime.Now.ToString())
                 };
                 newsList.Add(news);
             }
@@ -41,18 +41,18 @@ namespace NewsAgregator.Models.Parser.Sources
 
             string mainText = "";
 
-            foreach (var p in item.QuerySelectorAll("p"))
+            foreach (var p in item.QuerySelectorAll("p")) // собирает текстовые блоки в один объект
             {
                 mainText += p.TextContent + "\n";
             }
 
             News news = new News()
             {
-                Title = item.QuerySelector("h3.page-title").TextContent,
-                ImageSrc = item.QuerySelector("img").GetAttribute("src"),
+                Title = item.QuerySelector("h3.page-title")?.TextContent,
+                ImageSrc = item.QuerySelector("img")?.GetAttribute("src"),
                 Text = mainText,
                 NewsURL = url,
-                Date = Convert.ToDateTime(item.QuerySelector("time").GetAttribute("datetime"))
+                Date = Convert.ToDateTime(item.QuerySelector("time")?.GetAttribute("datetime") ?? DateTime.Now.ToString())
             };
 
             return news;

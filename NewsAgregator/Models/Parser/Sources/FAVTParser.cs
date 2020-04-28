@@ -15,20 +15,18 @@ namespace NewsAgregator.Models.Parser.Sources
         {
             List<News> newsList = new List<News>(); // Хранит объекты новостей News.
 
-            //IEnumerable<IElement> items = document.QuerySelector("tbody tr[valign=top] td:nth-child(2)").QuerySelectorAll("div.news-unit"); // Получить массив блоков новостей.
-            //IEnumerable<IElement> items = document.QuerySelector("tbody").QuerySelector("tr[valign=top]").QuerySelector("td:nth-child(2)").QuerySelectorAll("div.news-unit"); // Получить массив блоков новостей.
             IEnumerable<IElement> items = document.QuerySelectorAll("div.news-unit"); // Получить массив блоков новостей.
 
             foreach (var item in items)
             {
                 var title = item.QuerySelector("div.news-unit-title").QuerySelector("a");
-                //var url = item.QuerySelector("a").GetAttribute("href");
+
                 // Заполнение полей новости.
                 News news = new News()
                 {
                     Title = title?.TextContent ?? item.QuerySelector("div.news-unit-title").TextContent,
                     ImageSrc = item.QuerySelector("img")?.GetAttribute("src"),
-                    //Text = item.QuerySelector("p").TextContent,
+                    //Text = item.QuerySelector("p").TextContent, //на сайте новости отображаются только с заголовком, без аннотации
                     NewsURL = BaseUrl + item.QuerySelector("a")?.GetAttribute("href"),
                     Date = Convert.ToDateTime(item.QuerySelector("div.news-unit-date").TextContent)
                 };
@@ -50,11 +48,11 @@ namespace NewsAgregator.Models.Parser.Sources
 
             News news = new News()
             {
-                Title = item.QuerySelector("div.news-info h2").TextContent,
+                Title = item.QuerySelector("div.news-info h2")?.TextContent,
                 ImageSrc = item.QuerySelector("img")?.GetAttribute("src"),
                 Text = mainText,
                 NewsURL = url,
-                Date = Convert.ToDateTime(item.QuerySelector("div.news-unit-date").TextContent)
+                Date = Convert.ToDateTime(item.QuerySelector("div.news-unit-date")?.TextContent ?? DateTime.Now.ToString())
             };
 
             return news;

@@ -22,11 +22,11 @@ namespace NewsAgregator.Models.Parser.Sources
                 // Заполнение полей новости.
                 News news = new News()
                 {
-                    Title = item.QuerySelector("span.name")?.TextContent ?? "Отсутствует текст заголовка!",
+                    Title = item.QuerySelector("span.name")?.TextContent,
                     ImageSrc = "https://www.roscosmos.ru" + item.QuerySelector("img")?.GetAttribute("src"),
-                    Text = item.QuerySelector("span.anons")?.TextContent ?? "Основной текст",
+                    Text = item.QuerySelector("span.anons")?.TextContent,
                     NewsURL = "https://www.roscosmos.ru" + item.QuerySelector("a")?.GetAttribute("href"),
-                    Date = Convert.ToDateTime(item.QuerySelector("span.date")?.TextContent ?? "01.01.1111")
+                    Date = Convert.ToDateTime(item.QuerySelector("span.date")?.TextContent ?? DateTime.Now.ToString())
                 };
                 newsList.Add(news);
             }
@@ -51,10 +51,10 @@ namespace NewsAgregator.Models.Parser.Sources
             News news = new News()
             {
                 Title = item.QuerySelector("h2")?.TextContent,
-                ImageSrc = item.QuerySelector("img")?.GetAttribute("data-src"),
+                ImageSrc = item.QuerySelector("img")?.GetAttribute("src"),
                 Text = mainText,
                 NewsURL = url,
-                Date = Convert.ToDateTime(item.QuerySelector("div.date")?.TextContent ?? "01.01.1111")
+                Date = Convert.ToDateTime(item.QuerySelector("div.date")?.TextContent ?? DateTime.Now.ToString())
             };
 
             return news;

@@ -21,11 +21,6 @@ namespace NewsAgregator.Controllers
             Context = context;
         }
 
-        /*        MainParser<List<News>> parserAW = new MainParser<List<News>>(new AWParser());
-                MainParser<List<News>> parserFAVT = new MainParser<List<News>>(new FAVTParser());
-                MainParser<List<News>> parserFG = new MainParser<List<News>>(new FGParser());
-                MainParser<List<News>> parserRC = new MainParser<List<News>>(new RosCosmosParser());*/
-
         MainParser parser = new MainParser();
         IParser<News> parserAW = new AWParser();
         IParser<News> parserFAVT = new FAVTParser();
@@ -35,46 +30,57 @@ namespace NewsAgregator.Controllers
         public IActionResult Index()
         {
             var dataBase = Context.News;
-            var dbNews = Context.News.ToList();
+            IQueryable<News> dbNews = dataBase;
+            //var dbNews = Context.News.ToList();
 
-            // получаем список новостей за последний день.
-            //var news = parser.ParseNews(Context.NewsSources.ToList());
-            /*            var news = parserAW.ParsePage();
-                        news.AddRange(parserFAVT.ParsePage());
-                        news.AddRange(parserFG.ParsePage());
-                        news.AddRange(parserRC.ParsePage());*/
-            /*
-                        news.Sort((x, y) => y.Date.CompareTo(x.Date));
+            //получаем список новостей.
 
-                        // удаляем из полученного списка новости, существующие в БД.
-                        foreach (var item in news)
-                        {
-                            if (CheckNovelties(dbNews, item))
-                                dataBase.Add(item);
-                        }*/
+            var news = parserAW.ParseListNews(parser.ParsePage(parserAW.BaseUrl));
+            news.AddRange(parserFAVT.ParseListNews(parser.ParsePage(parserFAVT.BaseUrl)));
+            news.AddRange(parserFG.ParseListNews(parser.ParsePage(parserFG.BaseUrl)));
+            news.AddRange(parserRC.ParseListNews(parser.ParsePage(parserRC.BaseUrl)));
 
-            //for (int i = news.Count - 1; i >= 0; i--)
-            //{
-            //    else news.Remove(news[i]);
-            //}
-            //Context.SaveChanges();
+            news.Sort((x, y) => y.Date.CompareTo(x.Date));
+
+            //удаляем из полученного списка новости, существующие в БД.
+            foreach (var item in news)
+            {
+                if (CheckNovelties(dataBase.ToList(), item))
+                    dataBase.Add(item);
+            }
+
+/*            for (int i = news.Count - 1; i >= 0; i--)
+            {
+                else news.Remove(news[i]);
+            }*/
+            Context.SaveChanges();
             //dataBase.RemoveRange(dataBase);
+            dbNews = dataBase.OrderByDescending(s => s.Date);
             //Context.SaveChanges();
 
-            return View(dataBase.ToList());
+            //return View(dataBase.ToList());
+            return View(dbNews.ToList());
         }
 
         public IActionResult OpenNews(int id)
         {
-            List<News> listNews = Context.News.ToList();
+            List<News> listNews = Context.News.OrderByDescending(s => s.Date).ToList();
             string url = listNews[id].NewsURL;
 
             News news;
 
-            if (url.Contains("roscosmos"))
-            {
+            if (url.Contains("aviation21.ru"))
+                news = parserAW.ParseNews(parser.ParsePage(url), url);
+
+            else if (url.Contains("favt.ru"))
+                news = parserFAVT.ParseNews(parser.ParsePage(url), url);
+
+            else if (url.Contains("flightglobal.com"))
+                news = parserFG.ParseNews(parser.ParsePage(url), url);
+
+            else if (url.Contains("roscosmos.ru"))
                 news = parserRC.ParseNews(parser.ParsePage(url), url);
-            }
+
             else return Redirect("~/Home/Index");
 
             return View(news);
