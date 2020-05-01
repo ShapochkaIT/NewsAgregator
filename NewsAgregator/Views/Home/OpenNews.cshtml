@@ -4,6 +4,9 @@
 {
     <center><img src="@Model.ImageSrc" /></center>
 }
-<p>@Model.Text</p>
+@foreach (var item in @Model.Text.Split("\n"))
+{
+    <p>@item</p>
+}
 <a href="@Model.NewsURL">Читать в источнике...</a>
-<p>@Model.Date.DateTime</p>
+<h6>Опубликовано: <time>@Model.Date.DateTime</time></h6>

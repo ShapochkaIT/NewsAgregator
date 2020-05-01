@@ -14,7 +14,7 @@ namespace NewsAgregator.Controllers
 {
     public class HomeController : Controller
     {
-        int pageSize = 8;
+        int pageSize = 8; // количество изначально отображаемых статей
         public static List<News> dbNews;
         public AppDbContext Context { get; }
 
@@ -34,36 +34,36 @@ namespace NewsAgregator.Controllers
             int page = id ?? 0;
             var dataBase = Context.News;
 
-            //var dbNews = Context.News.ToList();
-
-            // получаем список новостей.
-
+            // создаем список новостных статей
             var news = parserAW.ParseListNews(parser.ParsePage(parserAW.BaseUrl));
             news.AddRange(parserFAVT.ParseListNews(parser.ParsePage(parserFAVT.BaseUrl)));
             news.AddRange(parserFG.ParseListNews(parser.ParsePage(parserFG.BaseUrl)));
             news.AddRange(parserRC.ParseListNews(parser.ParsePage(parserRC.BaseUrl)));
 
-            news.Sort((x, y) => y.Date.CompareTo(x.Date));
+            //news.Sort((x, y) => y.Date.CompareTo(x.Date));
 
-            // добавляем в БД новые новости
+            // добавляем новые статьи
             foreach (var item in news)
             {
                 if (CheckNovelties(dataBase.ToList(), item))
                     dataBase.Add(item);
             }
             Context.SaveChanges();
-            //dataBase.RemoveRange(dataBase);
-            dbNews = dataBase.OrderByDescending(s => s.Date).ToList(); // сортируем новости в БД по дате.
-            //Context.SaveChanges();
 
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            dbNews = dataBase.OrderByDescending(s => s.Date).ToList(); // сортируем новости по дате
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest") //если запрос асинхронный, то вызываем частичное представление для подгрузки новостей
             {
                 return PartialView("_Items", GetItemsPage(page));
             }
             return View(GetItemsPage(page));
-            //return View(dbNews.ToList());
         }
 
+        /// <summary>
+        /// Возвращает часть элементов страницы, в зависимости от номера страницы.
+        /// </summary>
+        /// <param name="page">Номер страницы.</param>
+        /// <returns></returns>
         private List<News> GetItemsPage(int page = 1)
         {
             var itemsToSkip = page * pageSize;

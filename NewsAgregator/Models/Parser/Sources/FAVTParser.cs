@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace NewsAgregator.Models.Parser.Sources
 {
+    /// <summary>
+    /// Парсер новостей с сайта Федерального Агенства Воздушного Транспорта.
+    /// </summary>
     public class FAVTParser : IParser<News>
     {
         public string BaseUrl { get; set; } = "https://favt.ru/novosti-sertifikacii-avia-tehniky/";
@@ -43,7 +46,7 @@ namespace NewsAgregator.Models.Parser.Sources
 
             foreach (var p in item.QuerySelectorAll("p"))
             {
-                mainText += p.TextContent;
+                mainText += $"{p.TextContent}\n";
             }
 
             News news = new News()

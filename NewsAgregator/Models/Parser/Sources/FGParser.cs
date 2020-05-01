@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace NewsAgregator.Models.Parser.Sources
 {
+    /// <summary>
+    /// Парсер новостей с сайта FlightGlobal.
+    /// </summary>
     public class FGParser : IParser<News>
     {
         public string BaseUrl { get; set; } = "https://www.flightglobal.com/1013.type";
@@ -38,6 +41,7 @@ namespace NewsAgregator.Models.Parser.Sources
 
             string mainText = "";
 
+            // некоторые статьи доступны полностью только по подписке, поэтому нужна проверка на null
             if (header == null && container == null)
             {
                 header = document.QuerySelector("div.storyPreview");
@@ -46,7 +50,7 @@ namespace NewsAgregator.Models.Parser.Sources
 
             foreach (var p in container.QuerySelectorAll("p"))
             {
-                mainText += p.TextContent;
+                mainText += $"{p.TextContent}\n";
             }
 
             News news = new News()

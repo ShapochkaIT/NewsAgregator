@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace NewsAgregator.Models.Parser.Sources
 {
+    /// <summary>
+    /// Парсер новостей с сайта РосКосмоса.
+    /// </summary>
     public class RosCosmosParser : IParser<News>
     {
         public string BaseUrl { get; set; } = "https://www.roscosmos.ru/102/";
@@ -41,11 +44,11 @@ namespace NewsAgregator.Models.Parser.Sources
 
             foreach (var p in item.QuerySelectorAll("p"))
             {
-                mainText += p.TextContent;
+                mainText += $"{p.TextContent}\n";
             }
             foreach (var p in item.QuerySelectorAll("div.block_v1"))
             {
-                mainText += p.TextContent;
+                mainText += $"{p.TextContent}\n";
             }
 
             News news = new News()

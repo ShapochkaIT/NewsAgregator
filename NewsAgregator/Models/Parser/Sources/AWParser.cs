@@ -43,7 +43,7 @@ namespace NewsAgregator.Models.Parser.Sources
 
             foreach (var p in item.QuerySelectorAll("p")) // собирает текстовые блоки в один объект
             {
-                mainText += p.TextContent;
+                mainText += $"{p.TextContent}\n";
             }
 
             News news = new News()
