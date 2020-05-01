@@ -1,9 +1,8 @@
-﻿@*@using NewsAgregator.Models*@
-
-<h3>@Model.Title</h3>
+﻿
+<center><h3>@Model.Title</h3></center>
 @if (@Model.ImageSrc != null)
 {
-    <center><img width="720" height="400" src="@Model.ImageSrc" /></center> 
+    <center><img src="@Model.ImageSrc" /></center>
 }
 <p>@Model.Text</p>
 <a href="@Model.NewsURL">Читать в источнике...</a>

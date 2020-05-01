@@ -14,6 +14,8 @@ namespace NewsAgregator.Controllers
 {
     public class HomeController : Controller
     {
+        int pageSize = 8;
+        public static List<News> dbNews;
         public AppDbContext Context { get; }
 
         public HomeController(AppDbContext context)
@@ -27,10 +29,11 @@ namespace NewsAgregator.Controllers
         IParser<News> parserFG = new FGParser();
         IParser<News> parserRC = new RosCosmosParser();
 
-        public IActionResult Index()
+        public IActionResult Index(int? id)
         {
+            int page = id ?? 0;
             var dataBase = Context.News;
-            IQueryable<News> dbNews = dataBase;
+
             //var dbNews = Context.News.ToList();
 
             // получаем список новостей.
@@ -50,10 +53,22 @@ namespace NewsAgregator.Controllers
             }
             Context.SaveChanges();
             //dataBase.RemoveRange(dataBase);
-            dbNews = dataBase.OrderByDescending(s => s.Date); // сортируем новости в БД по дате.
+            dbNews = dataBase.OrderByDescending(s => s.Date).ToList(); // сортируем новости в БД по дате.
             //Context.SaveChanges();
 
-            return View(dbNews.ToList());
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_Items", GetItemsPage(page));
+            }
+            return View(GetItemsPage(page));
+            //return View(dbNews.ToList());
+        }
+
+        private List<News> GetItemsPage(int page = 1)
+        {
+            var itemsToSkip = page * pageSize;
+
+            return dbNews.Skip(itemsToSkip).Take(pageSize).ToList();
         }
 
         /// <summary>
@@ -63,7 +78,7 @@ namespace NewsAgregator.Controllers
         /// <returns></returns>
         public IActionResult OpenNews(int id)
         {
-            List<News> listNews = Context.News.OrderByDescending(s => s.Date).ToList();
+            List<News> listNews = dbNews;
             string url = listNews[id].NewsURL;
 
             News news;

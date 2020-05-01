@@ -43,7 +43,7 @@ namespace NewsAgregator.Models.Parser.Sources
 
             foreach (var p in item.QuerySelectorAll("p"))
             {
-                mainText += p.TextContent + "\n";
+                mainText += p.TextContent;
             }
 
             News news = new News()

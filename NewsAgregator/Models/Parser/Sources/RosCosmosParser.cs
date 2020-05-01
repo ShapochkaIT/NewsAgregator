@@ -23,7 +23,7 @@ namespace NewsAgregator.Models.Parser.Sources
                 News news = new News()
                 {
                     Title = item.QuerySelector("span.name")?.TextContent,
-                    ImageSrc = "https://www.roscosmos.ru" + item.QuerySelector("img")?.GetAttribute("src"),
+                    ImageSrc = item.QuerySelector("img") == null ? null : "https://www.roscosmos.ru" + item.QuerySelector("img").GetAttribute("src"),
                     Text = item.QuerySelector("span.anons")?.TextContent,
                     NewsURL = "https://www.roscosmos.ru" + item.QuerySelector("a")?.GetAttribute("href"),
                     Date = Convert.ToDateTime(item.QuerySelector("span.date")?.TextContent ?? DateTime.Now.ToString())
@@ -41,17 +41,17 @@ namespace NewsAgregator.Models.Parser.Sources
 
             foreach (var p in item.QuerySelectorAll("p"))
             {
-                mainText += p.TextContent + "\n";
+                mainText += p.TextContent;
             }
             foreach (var p in item.QuerySelectorAll("div.block_v1"))
             {
-                mainText += p.TextContent + "\n";
+                mainText += p.TextContent;
             }
 
             News news = new News()
             {
                 Title = item.QuerySelector("h2")?.TextContent,
-                ImageSrc = "https://www.roscosmos.ru" + item.QuerySelector("img")?.GetAttribute("src"),
+                ImageSrc = item.QuerySelector("img") == null ? null : "https://www.roscosmos.ru" + item.QuerySelector("img").GetAttribute("src"),
                 Text = mainText,
                 NewsURL = url,
                 Date = Convert.ToDateTime(item.QuerySelector("div.date")?.TextContent ?? DateTime.Now.ToString())

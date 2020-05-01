@@ -38,9 +38,15 @@ namespace NewsAgregator.Models.Parser.Sources
 
             string mainText = "";
 
+            if (header == null && container == null)
+            {
+                header = document.QuerySelector("div.storyPreview");
+                container = document.QuerySelector("div.standfirst");
+            }
+
             foreach (var p in container.QuerySelectorAll("p"))
             {
-                mainText += p.TextContent + "\n";
+                mainText += p.TextContent;
             }
 
             News news = new News()
