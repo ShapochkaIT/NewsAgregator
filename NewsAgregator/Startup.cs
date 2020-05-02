@@ -56,7 +56,7 @@ namespace NewsAgregator
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}/{searchString?}");
             });
         }
     }

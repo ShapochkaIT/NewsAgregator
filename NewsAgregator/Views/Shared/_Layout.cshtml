@@ -9,24 +9,36 @@
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-black border-bottom box-shadow mb-3">
             <div class="container">
-                <center><a href="/Home/Index"><img src="~/images/logo.png"></a></center>
-                @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Новостной агрегатор</a>*@
+                <a href="/Home/Index"><img src="~/images/logo.png"></a>
+
+                @*<center><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png"></a></center>*@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-2">
                         @*<li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                </li>*@
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">На главную</a>
+                            </li>*@
+                        <li class="nav-item">
+                            <form asp-controller="Home" asp-action="Search">
+                                <p>
+                                    <input type="text" name="SearchString" placeholder="Найти...">
+
+                                    <button type="submit"><img src="~/images/search.png" height="26" width="26"></button>
+                                </p>
+                            </form>
+                        </li>
+
                         @*<li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                </li>*@
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>*@
                     </ul>
                 </div>
             </div>

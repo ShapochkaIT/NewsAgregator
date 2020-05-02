@@ -2,7 +2,7 @@
 <center><h3>@Model.Title</h3></center>
 @if (@Model.ImageSrc != null)
 {
-    <center><img src="@Model.ImageSrc" /></center>
+    <center><img src="@Model.ImageSrc" style="width: 70%;"/></center>
 }
 @foreach (var item in @Model.Text.Split("\n"))
 {

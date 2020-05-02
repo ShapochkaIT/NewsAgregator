@@ -16,6 +16,7 @@ namespace NewsAgregator.Controllers
     {
         int pageSize = 8; // количество изначально отображаемых статей
         public static List<News> dbNews;
+        public static List<News> searchList;
         public AppDbContext Context { get; }
 
         public HomeController(AppDbContext context)
@@ -51,12 +52,13 @@ namespace NewsAgregator.Controllers
             Context.SaveChanges();
 
             dbNews = dataBase.OrderByDescending(s => s.Date).ToList(); // сортируем новости по дате
+            searchList = dbNews;
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest") //если запрос асинхронный, то вызываем частичное представление для подгрузки новостей
             {
-                return PartialView("_Items", GetItemsPage(page));
+                return PartialView("_Items", GetItemsPage(dbNews, page));
             }
-            return View(GetItemsPage(page));
+            return View(GetItemsPage(dbNews, page));
         }
 
         /// <summary>
@@ -64,11 +66,11 @@ namespace NewsAgregator.Controllers
         /// </summary>
         /// <param name="page">Номер страницы.</param>
         /// <returns></returns>
-        private List<News> GetItemsPage(int page = 1)
+        private List<News> GetItemsPage(List<News> list, int page = 1)
         {
             var itemsToSkip = page * pageSize;
 
-            return dbNews.Skip(itemsToSkip).Take(pageSize).ToList();
+            return list.Skip(itemsToSkip).Take(pageSize).ToList();
         }
 
         /// <summary>
@@ -108,7 +110,7 @@ namespace NewsAgregator.Controllers
         /// <param name="listOldNews">Список новостей, уже добавленных в БД.</param>
         /// <param name="newNews">Новость на проверку.</param>
         /// <returns></returns>
-        bool CheckNovelties(List<News> listOldNews, News newNews)
+        private bool CheckNovelties(List<News> listOldNews, News newNews)
         {
             foreach (var news in listOldNews)
             {
@@ -116,6 +118,27 @@ namespace NewsAgregator.Controllers
                     return false;
             }
             return true;
+        }
+
+        public IActionResult Search(int? id, string searchString)
+        {
+            int page = id ?? 0;
+
+            ViewBag.SearchString = searchString;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                searchList = searchList.Where(s => s.Title.Contains(searchString) || (s.Text?.Contains(searchString) ?? false)).ToList();
+            }
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest") //если запрос асинхронный, то вызываем частичное представление для подгрузки новостей
+            {
+                return PartialView("_Items", GetItemsPage(searchList, page));
+            }
+
+            return View(GetItemsPage(searchList, page));
+
+            //return  View("Index", news.ToList());
         }
     }
 }
