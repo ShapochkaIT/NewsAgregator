@@ -124,11 +124,11 @@ namespace NewsAgregator.Controllers
         {
             int page = id ?? 0;
 
-            ViewBag.SearchString = searchString;
+            ViewBag.SearchString = searchString.ToLower();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                searchList = searchList.Where(s => s.Title.Contains(searchString) || (s.Text?.Contains(searchString) ?? false)).ToList();
+                searchList = searchList.Where(s => s.Title.ToLower().Contains(searchString) || (s.Text?.ToLower().Contains(searchString) ?? false)).ToList();
             }
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest") //если запрос асинхронный, то вызываем частичное представление для подгрузки новостей

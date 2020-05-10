@@ -19,6 +19,7 @@
         $('div#loading').hide();
 
         var page = 0;
+        var searchString = @ViewBag.SearchString;
         var _inCallback = false;
         function loadItems() {
             if (page > -1 && !_inCallback) {
@@ -28,7 +29,7 @@
 
                 $.ajax({
                     type: 'GET',
-                    url: '/Home/Search/' + page + @ViewBag.SearchString
+                    url: '/Home/Search/' + page + '/' + searchString,
                     success: function (data, textstatus) {
                         if (data != '') {
                             $("#scrolList").append(data);
