@@ -17,6 +17,10 @@ namespace NewsAgregator.Controllers
         int pageSize = 8; // количество изначально отображаемых статей
         public static List<News> dbNews;
         public static List<News> searchList;
+        public static bool RC;
+        public static bool AW;
+        public static bool FAVT;
+        public static bool FG;
         public AppDbContext Context { get; }
 
         public HomeController(AppDbContext context)
@@ -30,9 +34,8 @@ namespace NewsAgregator.Controllers
         IParser<News> parserFG = new FGParser();
         IParser<News> parserRC = new RosCosmosParser();
 
-        public IActionResult Index(int? id)
+        private void FormListNews()
         {
-            int page = id ?? 0;
             var dataBase = Context.News;
 
             // создаем список новостных статей
@@ -52,12 +55,20 @@ namespace NewsAgregator.Controllers
             Context.SaveChanges();
 
             dbNews = dataBase.OrderByDescending(s => s.Date).ToList(); // сортируем новости по дате
+        }
+
+        public IActionResult Main(int? id)
+        {
+            int page = id ?? 0;
+            if (page == 0) FormListNews();
+
             searchList = dbNews;
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest") //если запрос асинхронный, то вызываем частичное представление для подгрузки новостей
             {
                 return PartialView("_Items", GetItemsPage(dbNews, page));
             }
+            RC = true; AW = true; FAVT = true; FG = true;
             return View(GetItemsPage(dbNews, page));
         }
 
@@ -139,6 +150,39 @@ namespace NewsAgregator.Controllers
             return View(GetItemsPage(searchList, page));
 
             //return  View("Index", news.ToList());
+        }
+
+        [HttpPost]
+        public IActionResult ChooseSource(bool? RC, bool? AW, bool? FAVT, bool? FG)
+        {
+            FormListNews();
+
+            HomeController.RC = RC ?? true;
+            HomeController.AW = AW ?? true;
+            HomeController.FAVT = FAVT ?? true;
+            HomeController.FG = FG ?? true;
+
+            var newList = new List<News>();
+            if (RC == true)
+            {
+                newList.AddRange(dbNews.Where(n => n.NewsURL.Contains("roscosmos.ru")));
+            }
+            else if (AW == true)
+            {
+                newList.AddRange(dbNews.Where(n => n.NewsURL.Contains("flightglobal.com")));
+            }
+            else if (FAVT == true)
+            {
+                newList.AddRange(dbNews.Where(n => n.NewsURL.Contains("flightglobal.com")));
+            }
+            else if (FG == true)
+            {
+                newList.AddRange(dbNews.Where(n => n.NewsURL.Contains("flightglobal.com")));
+            }
+            newList.Sort((x, y) => y.Date.CompareTo(x.Date));
+            dbNews = newList;
+
+            return View("Main", GetItemsPage(dbNews, 0));
         }
     }
 }

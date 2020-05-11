@@ -14,13 +14,13 @@
                     }
                 </a>
             </td>
-            <td>
+            <td align="left">
                 <header>
                     <h4><a href="/Home/OpenNews/@s.IndexOf(item)">@item.Title</a></h4>
                 </header>
                 <article>@item.Text</article>
                 <br />
-                <h6>Опубликовано: <time>@item.Date.DateTime</time></h6>
+                <h6>Опубликовано: <time>@item.Date.DateTime.ToShortDateString()</time></h6>
             </td>
 
         </tr>

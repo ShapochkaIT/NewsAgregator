@@ -27,7 +27,7 @@
 
                 $.ajax({
                     type: 'GET',
-                    url: '/Home/Index/' + page,
+                    url: '/Home/Main/' + page,
                     success: function (data, textstatus) {
                         if (data != '') {
                             $("#scrolList").append(data);

@@ -1,12 +1,21 @@
 ﻿
-<center><h3>@Model.Title</h3></center>
-@if (@Model.ImageSrc != null)
-{
-    <center><img src="@Model.ImageSrc" style="width: 70%;"/></center>
-}
-@foreach (var item in @Model.Text.Split("\n"))
-{
-    <p>@item</p>
-}
-<a href="@Model.NewsURL">Читать в источнике...</a>
-<h6>Опубликовано: <time>@Model.Date.DateTime</time></h6>
+<table cellpadding="10">
+
+    <tr>
+
+        <td align="left">
+            <center><h3>@Model.Title</h3></center>
+            @if (@Model.ImageSrc != null)
+            {
+                <center><img src="@Model.ImageSrc" style="width: 70%;" /></center>
+            }
+            @foreach (var item in @Model.Text.Split("\n"))
+            {
+                <p>@item</p>
+            }
+            <a href="@Model.NewsURL">Читать в источнике...</a>
+            <h6>Опубликовано: <time>@Model.Date.DateTime.ToShortDateString()</time></h6>
+        </td>
+
+    </tr>
+</table>
