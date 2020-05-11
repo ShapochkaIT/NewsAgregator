@@ -62,7 +62,7 @@ namespace NewsAgregator.Controllers
             int page = id ?? 0;
             if (page == 0) FormListNews();
 
-            searchList = dbNews;
+
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest") //если запрос асинхронный, то вызываем частичное представление для подгрузки новостей
             {
@@ -134,8 +134,9 @@ namespace NewsAgregator.Controllers
         public IActionResult Search(int? id, string searchString)
         {
             int page = id ?? 0;
-
-            ViewBag.SearchString = searchString.ToLower();
+            searchList = dbNews;
+            searchString = searchString?.ToLower();
+            ViewBag.SearchString = searchString;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -149,7 +150,7 @@ namespace NewsAgregator.Controllers
 
             return View(GetItemsPage(searchList, page));
 
-            //return  View("Index", news.ToList());
+            //return  View("_Items", searchList);
         }
 
         [HttpPost]
