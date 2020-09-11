@@ -1,0 +1,54 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Mvc
+
+<script src="/node_modules/jquery/dist/jquery.js"></script>
+<script src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<div id="scrolList">
+    <partial name="_Items" />
+</div>
+
+<div id="loading">
+    <center><img src='@Url.Content("~/images/scroll_plane.gif")'></center>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        $('div#loading').hide();
+
+        var page = 0;
+        var searchString = @ViewBag.SearchString;
+        var _inCallback = false;
+        function loadItems() {
+            if (page > -1 && !_inCallback) {
+                _inCallback = true;
+                page++;
+                $('div#loading').show();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/Home/Search/' + page + '/' + searchString,
+                    success: function (data, textstatus) {
+                        if (data != '') {
+                            $("#scrolList").append(data);
+                        }
+                        else {
+                            page = -1;
+                        }
+                        _inCallback = false;
+                        $("div#loading").hide();
+                    }
+                });
+            }
+        }
+        // обработка события скроллинга
+        $(window).scroll(function () {
+            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+
+                loadItems();
+            }
+        });
+    })
+</script>

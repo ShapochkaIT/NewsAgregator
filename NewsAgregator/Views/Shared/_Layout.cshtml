@@ -1,0 +1,77 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using static NewsAgregator.Controllers.HomeController;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]  Новостной агрегатор</title>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<body>
+
+    <div id="container">
+        <div id="header">
+            <a href="/Home/Main"><img src="~/images/logo.png"></a>
+        </div>
+
+        <div id="navigation">
+
+            <ul class="menu-main">
+                <li><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Main">На главную</a></li>
+                <li>
+                    <form asp-controller="Home" asp-action="Search">
+                        <p>
+                            <input type="text" name="SearchString" placeholder="Найти...">
+
+                            <button type="submit"><img src="~/images/search.png" height="26" width="26"></button>
+                        </p>
+                    </form>
+                </li>
+            </ul>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+        </div>
+
+        <div id="sidebar">
+            <form asp-controller="Home" asp-action="ChooseSource">
+                <p>Выберите отображаемые источники:</p>
+                <p>@Html.CheckBox("RC", RC) Роскосмос</p>
+                <p>@Html.CheckBox("AW", AW) Авиация России</p>
+                <p>@Html.CheckBox("FAVT", FAVT) ФАВТ</p>
+                <p>@Html.CheckBox("FG", FG) FlightGlobal</p>
+                <p><input type="submit" value="Применить"></p>
+            </form>
+        </div>
+
+        <div id="content">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+        <div id="clear">
+
+        </div>
+
+        <div id="footer">
+            <div class="container">
+                &copy; 2020 - Новостной агрегатор -
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

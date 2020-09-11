@@ -1,0 +1,30 @@
+﻿@model List<NewsAgregator.Models.News>
+
+@foreach (var item in Model)
+{
+    var s = NewsAgregator.Controllers.HomeController.dbNews;
+    <table cellpadding="10">
+
+        <tr>
+            <td>
+                <a href="/Home/OpenNews/@s.IndexOf(item)">
+                    @if (item.ImageSrc != null)
+                    {
+                        <img width="240" height="160" src="@item.ImageSrc" />
+                    }
+                </a>
+            </td>
+            <td align="left">
+                <header>
+                    <h4><a href="/Home/OpenNews/@s.IndexOf(item)">@item.Title</a></h4>
+                </header>
+                <article>@item.Text</article>
+                <br />
+                <h6>Опубликовано: <time>@item.Date</time></h6>
+            </td>
+
+        </tr>
+
+    </table>
+    <img src="~/images/separator.png" />
+}
